@@ -11,17 +11,23 @@ import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 
 public class MainActivity extends AppCompatActivity {
+    public static Location startupLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        GetLocation();
-        setContentView(R.layout.fragment_activity);
+        startupLocation = GetLocation();
+        setContentView(R.layout.main_activity);
     }
 
-    private Location GetLocation() {
+    public void Activity_BackButton(android.view.View v){
+        Log.e("TAG", "BUTTON PRESSED");
+    }
+
+    public Location GetLocation() {
         // Get LocationManager object
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 

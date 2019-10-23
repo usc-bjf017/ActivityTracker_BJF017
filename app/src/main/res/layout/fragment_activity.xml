@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#303031"
+    android:clickable="true"
+    android:focusable="true"
     tools:context=".ActivityFragment">
 
     <ScrollView
@@ -16,10 +19,10 @@
 
             <Button
                 android:id="@+id/button_back"
-                android:onClick="Activity_BackButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:onClick="ActivityButton_Back"
                 android:text="@string/activity_back_button" />
 
             <TextView
@@ -49,6 +52,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
+                android:onClick="ActivityButton_Date"
                 android:text="@string/activity_date_button" />
 
             <TextView
@@ -82,6 +86,7 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:layout_weight="1"
+                android:onClick="ActivityButton_Map"
                 android:text="@string/activity_map_button" />
 
             <Button
@@ -91,6 +96,7 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:layout_weight="1"
+                android:onClick="ActivityButton_Photo"
                 android:text="@string/activity_photo_button" />
 
             <ImageView
@@ -107,6 +113,7 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:layout_weight="1"
+                android:onClick="ActivityButton_Share"
                 android:text="@string/activity_share" />
 
         </LinearLayout>
@@ -114,4 +121,4 @@
 
     </ScrollView>
 
-</FrameLayout>
+</RelativeLayout>

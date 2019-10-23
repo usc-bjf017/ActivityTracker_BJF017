@@ -1,12 +1,13 @@
 package com.benjaminfinlay.activitytracker;
 
 import android.location.Location;
+import android.os.Parcelable;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
 
-public class TrackedActivity {
+class TrackedActivity {
     private UUID activityID;
     private String activityTitle;
     private String activityPlace;
@@ -14,7 +15,7 @@ public class TrackedActivity {
     private String activityDetails;
     private Location activityLocation;
 
-    public TrackedActivity(Location currentLocation) {
+    TrackedActivity(Location currentLocation) {
         activityID = UUID.randomUUID();
         activityDate = Calendar.getInstance().getTime();
         activityLocation = currentLocation;
@@ -23,50 +24,46 @@ public class TrackedActivity {
     //--------------------------------------------------
     // GETTERS
     //--------------------------------------------------
-    public UUID getActivityID() {
+    UUID getActivityID() {
         return activityID;
     }
 
-    public String getActivityTitle() {
+    String getActivityTitle() {
         return activityTitle;
     }
 
-    public String getActivityPlace() {
+    String getActivityPlace() {
         return activityPlace;
     }
 
-    public Date getActivityDate() {
+    Date getActivityDate() {
         return activityDate;
     }
 
-    public String getActivityDetails() {
+    String getActivityDetails() {
         return activityDetails;
     }
 
-    public Location getActivityLocation() {
+    Location getActivityLocation() {
         return activityLocation;
     }
 
     //--------------------------------------------------
     // SETTERS
     //--------------------------------------------------
-    public void setActivityTitle(String activityTitle) {
+    void setActivityTitle(String activityTitle) {
         this.activityTitle = activityTitle;
     }
 
-    public void setActivityPlace(String activityPlace) {
+    void setActivityPlace(String activityPlace) {
         this.activityPlace = activityPlace;
     }
 
-    public void setActivityDate(Date activityDate) {
+    void setActivityDate(Date activityDate) {
         this.activityDate = activityDate;
     }
 
-    public void setActivityDetails(String activityDetails) {
-        this.activityDetails = activityDetails;
-    }
+    void setActivityDetails(String activityDetails) { this.activityDetails = activityDetails; }
 
-    public void setActivityLocation(Location activityLocation) {
-        this.activityLocation = activityLocation;
-    }
+    void setActivityLocation(Location activityLocation) { this.activityLocation = activityLocation; }
 }

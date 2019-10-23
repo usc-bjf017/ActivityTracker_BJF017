@@ -9,12 +9,13 @@ import android.widget.TextView;
 
 import java.text.Format;
 import java.text.SimpleDateFormat;
+import java.util.List;
 
 public class CustomAdapter extends ArrayAdapter {
     private final Activity context;
-    private final TrackedActivity[] activities;
+    private final List<TrackedActivity> activities;
 
-    public CustomAdapter(Activity context, TrackedActivity[] activities) {
+    public CustomAdapter(Activity context, List<TrackedActivity> activities) {
         super(context, R.layout.list_item, activities);
 
         this.context = context;
@@ -29,11 +30,11 @@ public class CustomAdapter extends ArrayAdapter {
         TextView placeInput = (TextView) itemView.findViewById(R.id.itemTextPlace);
         TextView dateInput = (TextView) itemView.findViewById(R.id.itemTextDate);
 
-        titleInput.setText(activities[position].getActivityTitle());
-        placeInput.setText(activities[position].getActivityPlace());
+        titleInput.setText(activities.get(position).getActivityTitle());
+        placeInput.setText(activities.get(position).getActivityPlace());
 
         Format formatter = new SimpleDateFormat("dd-MM-yyyy");
-        dateInput.setText(formatter.format(activities[position].getActivityDate()));
+        dateInput.setText(formatter.format(activities.get(position).getActivityDate()));
 
         return itemView;
     }

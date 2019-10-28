@@ -4,12 +4,11 @@
     <string name="activity_title_label">Title</string>
     <string name="activity_title_hint">Enter Activity Title</string>
     <string name="activity_date_label">Date</string>
-    <string name="activity_date_button">22/10/2019</string>
     <string name="activity_details_label">Details</string>
     <string name="activity_details_hint">Enter Activity Details</string>
     <string name="activity_map_button">Map</string>
     <string name="activity_photo_button">Photo</string>
     <string name="activity_share">Share</string>
-
     <string name="activity_photo_description">Photo of Activity</string>
+    <string name="date_picker_title">Date Picker</string>
 </resources>

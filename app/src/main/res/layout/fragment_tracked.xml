@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#303031"
-    android:clickable="true"
-    android:focusable="true"
-    tools:context=".ActivityFragment">
+    android:orientation="vertical">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -15,39 +13,40 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <Button
-                android:id="@+id/button_back"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:onClick="ActivityButton_Back"
-                android:text="@string/activity_back_button" />
+            android:orientation="vertical" >
 
             <TextView
                 style="?android:listSeparatorTextViewStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/activity_title_label" />
+                android:text="@string/tracked_title_label" />
 
             <EditText
-                android:id="@+id/input_title"
+                android:id="@+id/tracked_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:hint="@string/activity_title_hint"
-                android:inputType="" />
+                android:hint="@string/tracked_title_hint" />
 
             <TextView
                 style="?android:listSeparatorTextViewStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/activity_date_label" />
+                android:text="@string/tracked_place_label" />
+
+            <EditText
+                android:id="@+id/tracked_place"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/tracked_place_hint" />
+
+            <TextView
+                style="?android:listSeparatorTextViewStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/tracked_date_label" />
 
             <Button
-                android:id="@+id/button_date"
+                android:id="@+id/tracked_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
@@ -57,66 +56,67 @@
                 style="?android:listSeparatorTextViewStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/activity_details_label" />
+                android:text="@string/tracked_details_label" />
 
             <EditText
-                android:id="@+id/input_details"
+                android:id="@+id/tracked_details"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_weight="1"
-                android:hint="@string/activity_details_hint"
-                android:inputType="" />
+                android:hint="@string/tracked_details_hint" />
 
             <TextView
-                android:id="@+id/text_map_location"
                 style="?android:listSeparatorTextViewStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                android:text="@string/tracked_map_label" />
+
+            <TextView
+                android:id="@+id/tracked_map_location"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="LAT AND LONG" />
 
             <Button
-                android:id="@+id/button_map"
+                android:id="@+id/tracked_map"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
-                android:layout_weight="1"
-                android:onClick="ActivityButton_Map"
-                android:text="@string/activity_map_button" />
-
-            <Button
-                android:id="@+id/button_photo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_weight="1"
-                android:onClick="ActivityButton_Photo"
-                android:text="@string/activity_photo_button" />
+                android:text="@string/tracked_map_button" />
 
             <ImageView
-                android:id="@+id/imageView"
+                android:id="@+id/tracked_imageView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:contentDescription="@string/activity_photo_description"
+                android:layout_height="wrap_content"
                 tools:srcCompat="@tools:sample/avatars" />
 
             <Button
-                android:id="@+id/button_share"
+                android:id="@+id/tracked_imageButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
-                android:layout_weight="1"
-                android:onClick="ActivityButton_Share"
-                android:text="@string/activity_share" />
+                android:text="@string/tracked_image_button" />
 
+            <Button
+                android:id="@+id/tracked_share"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:text="@string/tracked_share_button" />
+
+            <Button
+                android:id="@+id/tracked_delete"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:background="#F44336"
+                android:text="@string/tracked_delete_button"
+                android:visibility="visible" />
         </LinearLayout>
-
-
     </ScrollView>
 
-</RelativeLayout>
+</LinearLayout>

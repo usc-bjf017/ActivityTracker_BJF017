@@ -2,26 +2,16 @@ package com.benjaminfinlay.activitytracker;
 
 import android.content.Context;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
 import java.util.UUID;
 
 public class TrackedManager {
-
-    private Stack<Tracked> mTracked;
-
     private static TrackedManager sTrackedManager;
-    private Context mAppContext;
+    private SQLiteDatabaseHelper db;
 
     private TrackedManager(Context appContext) {
-        mAppContext = appContext;
-        mTracked = new Stack<Tracked>();
-
-        for (int i = 0; i < 3; i++) {
-            Tracked a = new Tracked();
-            a.setTitle("Tracked #" + i);
-            mTracked.add(a);
-        }
+        db = new SQLiteDatabaseHelper(appContext);
     }
 
     public static TrackedManager get(Context c) {
@@ -32,29 +22,40 @@ public class TrackedManager {
     }
 
     public void addTracked(Tracked a) {
-        mTracked.add(a);
+        db.addTracked(a);
     }
 
     public void removeTracked(Tracked a) {
-        mTracked.remove(a);
+        db.removeTracked(a);
     }
 
     public Stack<Tracked> getAllTracked() {
-        return mTracked;
+        List<Tracked> trackedList =  db.allTrackedActivity();
+        Stack<Tracked> trackedStack = new Stack<Tracked>();
+        trackedStack.addAll(trackedList);
+        return trackedStack;
     }
 
     public Tracked getTracked(UUID id) {
-        for (Tracked a : mTracked) {
-            if (a.getId().equals(id))
+        List<Tracked> trackedList =  db.allTrackedActivity();
+        for (Tracked a : trackedList) {
+            if (a.getUUID().equals(id)) {
                 return a;
+            }
         }
         return null;
     }
 
     public void removeTracked(UUID id) {
-        for (Tracked a : mTracked) {
-            if (a.getId().equals(id))
-                mTracked.remove(a);
+        List<Tracked> trackedList =  db.allTrackedActivity();
+        for (Tracked a : trackedList) {
+            if (a.getUUID().equals(id)) {
+                db.removeTracked(a);
+            }
         }
+    }
+
+    public void updateTracked(Tracked trackedActivity) {
+        db.updateTracked(trackedActivity);
     }
 }

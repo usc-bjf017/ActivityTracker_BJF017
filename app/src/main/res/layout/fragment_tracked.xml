@@ -88,7 +88,9 @@
             <ImageView
                 android:id="@+id/tracked_imageView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="100dp"
+                android:scaleType="centerInside"
+                android:background="@color/cardview_dark_background"
                 tools:srcCompat="@tools:sample/avatars" />
 
             <Button

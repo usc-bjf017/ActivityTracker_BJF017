@@ -4,7 +4,11 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.hardware.Camera;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,12 +16,14 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.NavUtils;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
@@ -25,7 +31,6 @@ import java.util.Date;
 import java.util.UUID;
 
 public class TrackedFragment extends Fragment {
-    private static final String TAG = "TrackedFragment";
     public static final String EXTRA_TRACKED_ID = "tracked_id";
 
     private static final String DIALOG_DATE = "date";
@@ -40,6 +45,7 @@ public class TrackedFragment extends Fragment {
     private TextView mLocationText;
     private Button mMapButton;
     private Button mPhotoButton;
+    private ImageView mImageView;
     private Button mShareButton;
     private Button mDeleteButton;
 
@@ -54,6 +60,7 @@ public class TrackedFragment extends Fragment {
     private void updateDate() {
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
         mDateButton.setText(formatter.format(mTracked.getDate()));
+        TrackedManager.get(getActivity()).updateTracked(mTracked);
     }
 
     @TargetApi(11)
@@ -77,10 +84,10 @@ public class TrackedFragment extends Fragment {
             }
             public void beforeTextChanged(
                     CharSequence c, int start, int count, int after) {
-            // This space intentionally left blank
+                // This space intentionally left blank
             }
             public void afterTextChanged(Editable c) {
-            // This one too
+                TrackedManager.get(getActivity()).updateTracked(mTracked);
             }
         });
 
@@ -96,7 +103,7 @@ public class TrackedFragment extends Fragment {
                 // This space intentionally left blank
             }
             public void afterTextChanged(Editable c) {
-                // This one too
+                TrackedManager.get(getActivity()).updateTracked(mTracked);
             }
         });
 
@@ -104,10 +111,8 @@ public class TrackedFragment extends Fragment {
         updateDate();
         mDateButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                FragmentManager fm = getActivity()
-                        .getSupportFragmentManager();
-                DatePickerFragment dialog = DatePickerFragment
-                        .newInstance(mTracked.getDate());
+                FragmentManager fm = getActivity().getSupportFragmentManager();
+                DatePickerFragment dialog = DatePickerFragment.newInstance(mTracked.getDate());
                 dialog.setTargetFragment(TrackedFragment.this, REQUEST_DATE);
                 dialog.show(fm, DIALOG_DATE);
             }
@@ -125,7 +130,7 @@ public class TrackedFragment extends Fragment {
                 // This space intentionally left blank
             }
             public void afterTextChanged(Editable c) {
-                // This one too
+                TrackedManager.get(getActivity()).updateTracked(mTracked);
             }
         });
 
@@ -137,8 +142,16 @@ public class TrackedFragment extends Fragment {
         mMapButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Intent i = new Intent(getActivity(), TrackedCameraActivity.class);
-                //startActivityForResult(i, REQUEST_PHOTO);
+                // Convert the location to a geo string
+                String posToString = "geo:" + mTracked.getLocation().getLatitude() + "," + mTracked.getLocation().getLongitude();
+                // Create a Uri from an intent string. Use the result to create an Intent.
+                Uri gmmIntentUri = Uri.parse(posToString);
+                // Create an Intent from gmmIntentUri. Set the action to ACTION_VIEW
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                // Make the Intent explicit by setting the Google Maps package
+                mapIntent.setPackage("com.google.android.apps.maps");
+                // Attempt to start an activity that can handle the Intent
+                startActivity(mapIntent);
             }
         });
 
@@ -150,6 +163,8 @@ public class TrackedFragment extends Fragment {
                 startActivityForResult(i, REQUEST_PHOTO);
             }
         });
+
+        mImageView = (ImageView)v.findViewById(R.id.tracked_imageView);
 
         mShareButton = (Button)v.findViewById(R.id.tracked_share);
         mShareButton.setOnClickListener(new View.OnClickListener() {
@@ -173,6 +188,7 @@ public class TrackedFragment extends Fragment {
         mDeleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                TrackedManager.get(getActivity()).updateTracked(mTracked);
                 UUID trackedId = (UUID)getArguments().getSerializable(EXTRA_TRACKED_ID);
                 TrackedManager.get(getActivity()).removeTracked(trackedId);
 
@@ -221,6 +237,15 @@ public class TrackedFragment extends Fragment {
             Date date = (Date)data.getSerializableExtra(DatePickerFragment.EXTRA_DATE);
             mTracked.setDate(date);
             updateDate();
+        } else if (requestCode == REQUEST_PHOTO) {
+            // Create a new Photo object and attach it to the crime
+            String filename = data.getStringExtra(TrackedCameraFragment.EXTRA_PHOTO_FILENAME);
+            if (filename != null) {
+                Photo photo = new Photo(filename);
+                String path = getActivity().getFileStreamPath(photo.getFilename()).getAbsolutePath();
+                mTracked.setImagePath(path);
+                showPhoto();
+            }
         }
     }
 
@@ -228,18 +253,37 @@ public class TrackedFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-
-                if (mTracked.getTitle() == null) {
-                    UUID trackedId = (UUID)getArguments().getSerializable(EXTRA_TRACKED_ID);
-                    TrackedManager.get(getActivity()).removeTracked(trackedId);
-                }
-
+                TrackedManager.get(getActivity()).updateTracked(mTracked);
                 if (NavUtils.getParentActivityName(getActivity()) != null) {
                     NavUtils.navigateUpFromSameTask(getActivity());
                 }
                 return true;
             default:
+                TrackedManager.get(getActivity()).updateTracked(mTracked);
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void showPhoto() {
+        TrackedManager.get(getActivity()).updateTracked(mTracked);
+        // (Re)set the image button's image based on our photo
+        String p = mTracked.getImagePath();
+        BitmapDrawable b = null;
+        if (p != null) {
+            b = PictureUtils.getScaledDrawable(getActivity(), p);
+            mImageView.setImageDrawable(b);
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        showPhoto();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        PictureUtils.cleanImageView(mImageView);
     }
 }

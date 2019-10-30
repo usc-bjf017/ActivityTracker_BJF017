@@ -6,8 +6,8 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-
     <uses-permission android:name="android.permission.CAMERA" />
+
     <uses-feature android:name="android.hardware.camera" />
 
     <application
@@ -17,26 +17,31 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
-
         <activity android:name=".TrackedListActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".TrackedPagerActivity"
+        <activity
+            android:name=".TrackedPagerActivity"
             android:label="@string/app_name">
-            <meta-data android:name="android.support.PARENT_ACTIVITY"
-                android:value=".TrackedListActivity"/>
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".TrackedListActivity" />
         </activity>
-
-        <activity android:name=".TrackedCameraActivity"
+        <activity
+            android:name=".TrackedCameraActivity"
             android:exported="true"
-            android:screenOrientation="landscape"
+            android:label="@string/app_name"
+            android:screenOrientation="landscape">
+        </activity>
+        <activity
+            android:name=".TrackedWebActivity"
+            android:exported="true"
             android:label="@string/app_name">
         </activity>
-
     </application>
 
 </manifest>

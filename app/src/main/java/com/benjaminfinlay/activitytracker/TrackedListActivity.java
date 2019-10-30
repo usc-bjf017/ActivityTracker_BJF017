@@ -13,13 +13,16 @@ import android.support.v4.app.Fragment;
 public class TrackedListActivity extends SingleFragmentActivity {
     public static Location startupLocation;
 
+    //SQLiteDatabaseHelper db = new SQLiteDatabaseHelper(this);
+
     @Override
     protected Fragment createFragment() {
-        startupLocation = GetLocation();
+        startupLocation = getLocation();
+
         return new TrackedListFragment();
     }
 
-    private Location GetLocation() {
+    private Location getLocation() {
         // Get LocationManager object
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 

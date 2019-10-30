@@ -13,7 +13,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Stack;
 
 public class TrackedListFragment extends ListFragment {
@@ -37,7 +36,7 @@ public class TrackedListFragment extends ListFragment {
 
         // Start CrimePagerActivity with this crime
         Intent i = new Intent(getActivity(), TrackedPagerActivity.class);
-        i.putExtra(TrackedFragment.EXTRA_TRACKED_ID, a.getId());
+        i.putExtra(TrackedFragment.EXTRA_TRACKED_ID, a.getUUID());
         startActivity(i);
     }
 
@@ -53,7 +52,7 @@ public class TrackedListFragment extends ListFragment {
                 convertView = getActivity().getLayoutInflater()
                         .inflate(R.layout.list_item_tracked, null);
             }
-            // Configure the view for this Crime
+            // Configure the view for this tracked activity
             Tracked a = getItem(position);
 
             // Title Input
@@ -92,11 +91,12 @@ public class TrackedListFragment extends ListFragment {
                 Tracked tracked = new Tracked();
                 TrackedManager.get(getActivity()).addTracked(tracked);
                 Intent i = new Intent(getActivity(), TrackedPagerActivity.class);
-                i.putExtra(TrackedFragment.EXTRA_TRACKED_ID, tracked.getId());
+                i.putExtra(TrackedFragment.EXTRA_TRACKED_ID, tracked.getUUID());
                 startActivityForResult(i, 0);
                 return true;
             case R.id.menu_help:
-                // TODO add the help menu
+                Intent a = new Intent(getActivity(), TrackedWebActivity.class);
+                startActivityForResult(a, 0);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

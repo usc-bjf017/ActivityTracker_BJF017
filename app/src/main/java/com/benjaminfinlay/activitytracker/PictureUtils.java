@@ -7,13 +7,15 @@ import android.graphics.drawable.BitmapDrawable;
 import android.view.Display;
 import android.widget.ImageView;
 
-public class PictureUtils {
+/**
+ * Handles the images to a manageable scale.
+ */
+class PictureUtils {
+
     /**
-     * Get a BitmapDrawable from a local file that is scaled down
-     * to fit the current Window size.
+     * Get BitmapDrawable from a location photo path to scale to the needed size.
      */
-    @SuppressWarnings("deprecation")
-    public static BitmapDrawable getScaledDrawable(Activity a, String path) {
+    static BitmapDrawable getScaledDrawable(Activity a, String path) {
         Display display = a.getWindowManager().getDefaultDisplay();
         float destWidth = display.getWidth();
         float destHeight = display.getHeight();
@@ -37,7 +39,11 @@ public class PictureUtils {
         return new BitmapDrawable(a.getResources(), bitmap);
     }
 
-    public static void cleanImageView(ImageView imageView) {
+    /**
+     * Recycle an image view from memory to avoid memory cap.
+     * @param imageView Image view to clean/recycle image from.
+     */
+    static void cleanImageView(ImageView imageView) {
         if (!(imageView.getDrawable() instanceof BitmapDrawable))
             return;
         // Clean up the view's image for the sake of memory

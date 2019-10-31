@@ -1,22 +1,19 @@
 package com.benjaminfinlay.activitytracker;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.hardware.Camera;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.NavUtils;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,25 +27,25 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
 
+/**
+ * Main fragment for viewing and editing information on Tracked Activity's
+ */
 public class TrackedFragment extends Fragment {
-    public static final String EXTRA_TRACKED_ID = "tracked_id";
 
+    public static final String EXTRA_TRACKED_ID = "tracked_id";
     private static final String DIALOG_DATE = "date";
     private static final int REQUEST_DATE = 0;
     private static final int REQUEST_PHOTO = 1;
 
     private Tracked mTracked;
-    private EditText mTitleField;
-    private EditText mPlaceField;
     private Button mDateButton;
-    private EditText mDetailsField;
-    private TextView mLocationText;
-    private Button mMapButton;
-    private Button mPhotoButton;
     private ImageView mImageView;
-    private Button mShareButton;
-    private Button mDeleteButton;
 
+    /**
+     * Triggered when the fragment is created.
+     * Gets the UUID of the Tracked Activity that needs to be opened and retrieves the data.
+     * @param savedInstanceState App's compiled code and resources.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,25 +54,27 @@ public class TrackedFragment extends Fragment {
         mTracked = TrackedManager.get(getActivity()).getTracked(trackedId);
     }
 
-    private void updateDate() {
-        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
-        mDateButton.setText(formatter.format(mTracked.getDate()));
-        TrackedManager.get(getActivity()).updateTracked(mTracked);
-    }
-
+    /**
+     * Triggered when the Fragment view is created.
+     * Handles button, text fields.. etc
+     * Controlling saving, display and input of the Tracked Activity's information.
+     * @param inflater To create view instance based on XML file.
+     * @param parent Base view to create the view instance in.
+     * @param savedInstanceState App's compiled code and resources.
+     * @return Return the new view created.
+     */
     @TargetApi(11)
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup parent,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_tracked, parent, false);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            if (NavUtils.getParentActivityName(getActivity()) != null) {
-                getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
-            }
+        // Sets up back button. To return to activity list
+        if (NavUtils.getParentActivityName(getActivity()) != null) {
+            getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        mTitleField = (EditText)v.findViewById(R.id.tracked_title);
+        // Title field to display and control activity title
+        EditText mTitleField = (EditText) v.findViewById(R.id.tracked_title);
         mTitleField.setText(mTracked.getTitle());
         mTitleField.addTextChangedListener(new TextWatcher() {
             public void onTextChanged(
@@ -91,7 +90,8 @@ public class TrackedFragment extends Fragment {
             }
         });
 
-        mPlaceField = (EditText)v.findViewById(R.id.tracked_place);
+        // Place field to display and control activity place
+        EditText mPlaceField = (EditText) v.findViewById(R.id.tracked_place);
         mPlaceField.setText(mTracked.getPlace());
         mPlaceField.addTextChangedListener(new TextWatcher() {
             public void onTextChanged(
@@ -107,8 +107,10 @@ public class TrackedFragment extends Fragment {
             }
         });
 
+        // Date field to display and control activity date
         mDateButton = (Button)v.findViewById(R.id.tracked_date);
-        updateDate();
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+        mDateButton.setText(formatter.format(mTracked.getDate()));
         mDateButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 FragmentManager fm = getActivity().getSupportFragmentManager();
@@ -118,7 +120,8 @@ public class TrackedFragment extends Fragment {
             }
         });
 
-        mDetailsField = (EditText)v.findViewById(R.id.tracked_details);
+        // Details field to display and control activity details
+        EditText mDetailsField = (EditText) v.findViewById(R.id.tracked_details);
         mDetailsField.setText(mTracked.getDetails());
         mDetailsField.addTextChangedListener(new TextWatcher() {
             public void onTextChanged(
@@ -134,11 +137,13 @@ public class TrackedFragment extends Fragment {
             }
         });
 
-        mLocationText = (TextView) v.findViewById(R.id.tracked_map_location);
+        // Location field to display and control activity location
+        TextView mLocationText = (TextView) v.findViewById(R.id.tracked_map_location);
         String newLocationString = "Latitude: " + mTracked.getLocation().getLatitude() + "\nLongitude: " + mTracked.getLocation().getLongitude();
         mLocationText.setText(newLocationString);
 
-        mMapButton = (Button)v.findViewById(R.id.tracked_map);
+        // Map button to take the user to the Map View of the tracked activity's location
+        Button mMapButton = (Button) v.findViewById(R.id.tracked_map);
         mMapButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -155,7 +160,8 @@ public class TrackedFragment extends Fragment {
             }
         });
 
-        mPhotoButton = (Button)v.findViewById(R.id.tracked_imageButton);
+        // Photo button takes the user to take a new image that will be added to the Tracked Activity
+        Button mPhotoButton = (Button) v.findViewById(R.id.tracked_imageButton);
         mPhotoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -164,9 +170,11 @@ public class TrackedFragment extends Fragment {
             }
         });
 
+        // Get the reference to the Image view to display the captured photo
         mImageView = (ImageView)v.findViewById(R.id.tracked_imageView);
 
-        mShareButton = (Button)v.findViewById(R.id.tracked_share);
+        // Share button takes the user to share some of the basic information of the Tracked Activity
+        Button mShareButton = (Button) v.findViewById(R.id.tracked_share);
         mShareButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -179,8 +187,10 @@ public class TrackedFragment extends Fragment {
             }
         });
 
-        mDeleteButton = (Button)v.findViewById(R.id.tracked_delete);
-        if (mTracked.getTitle() == null) {
+        // Delete button deletes the tracked activity from the SQLite Database and returns the user to the Tracked Activity List UI.
+        // Only visible after the activity has been viewed/created for the first time.
+        Button mDeleteButton = (Button) v.findViewById(R.id.tracked_delete);
+        if (mTracked.getTitle() == null || mTracked.getTitle().equals("")) {
             mDeleteButton.setVisibility(View.INVISIBLE);
         } else {
             mDeleteButton.setVisibility(View.VISIBLE);
@@ -200,10 +210,7 @@ public class TrackedFragment extends Fragment {
 
         // If camera is not available, disable camera functionality
         PackageManager pm = getActivity().getPackageManager();
-        boolean hasACamera = pm.hasSystemFeature(PackageManager.FEATURE_CAMERA) ||
-                pm.hasSystemFeature(PackageManager.FEATURE_CAMERA_FRONT) ||
-                (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD &&
-                        Camera.getNumberOfCameras() > 0);
+        boolean hasACamera = pm.hasSystemFeature(PackageManager.FEATURE_CAMERA) || pm.hasSystemFeature(PackageManager.FEATURE_CAMERA_FRONT) || Camera.getNumberOfCameras() > 0;
         if (!hasACamera) {
             mPhotoButton.setEnabled(false);
         }
@@ -211,14 +218,25 @@ public class TrackedFragment extends Fragment {
         return v;
     }
 
+    /**
+     * Used to create a new instance of the Tracked Fragment view.
+     * @param trackedId UUID of the tracked activity that need to be viewed in Tracked Fragment.
+     * @return Returns the new Tracked Fragment to be viewed.
+     */
     public static TrackedFragment newInstance(UUID trackedId) {
         Bundle args = new Bundle();
+        // Adds the activity id to the Fragment that needs to be viewed and edited when it opens.
         args.putSerializable(EXTRA_TRACKED_ID, trackedId);
         TrackedFragment fragment = new TrackedFragment();
         fragment.setArguments(args);
         return fragment;
     }
 
+    /**
+     * Gets the basic report of the Tracked Activity to be shared. (Share Button)
+     * Messenger, Email, Tweet etc...
+     * @return Return the string of the report.
+     */
     private String getTrackedActivityReport() {
 
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
@@ -230,28 +248,44 @@ public class TrackedFragment extends Fragment {
                 + "Location: " + mTracked.getLocation().getLatitude() + " " + mTracked.getLocation().getLongitude();
     }
 
+    /**
+     * Gets the results of the button popups to be added to the Tracked Activity information.
+     * @param requestCode Type of data found (Date or Photo)
+     * @param resultCode The result the user has selected.
+     * @param data The data gotten.
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // OK button in data popup
         if (resultCode != Activity.RESULT_OK) return;
+        // Date popup data
         if (requestCode == REQUEST_DATE) {
             Date date = (Date)data.getSerializableExtra(DatePickerFragment.EXTRA_DATE);
             mTracked.setDate(date);
-            updateDate();
-        } else if (requestCode == REQUEST_PHOTO) {
-            // Create a new Photo object and attach it to the crime
+            SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+            mDateButton.setText(formatter.format(mTracked.getDate()));
+            TrackedManager.get(getActivity()).updateTracked(mTracked);
+        } else if (requestCode == REQUEST_PHOTO) // Photo data
+        {
+            // Take the new photos filepath and add it to the SQLite Database and show image in current Tracked Activity.
             String filename = data.getStringExtra(TrackedCameraFragment.EXTRA_PHOTO_FILENAME);
             if (filename != null) {
-                Photo photo = new Photo(filename);
-                String path = getActivity().getFileStreamPath(photo.getFilename()).getAbsolutePath();
+                String path = getActivity().getFileStreamPath(filename).getAbsolutePath();
                 mTracked.setImagePath(path);
                 showPhoto();
             }
         }
     }
 
+    /**
+     * Menu bar options selected
+     * @param item Button on menu bar selected
+     * @return Return if the button press has been handled
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            // Home button to take the user back to the List UI
             case android.R.id.home:
                 TrackedManager.get(getActivity()).updateTracked(mTracked);
                 if (NavUtils.getParentActivityName(getActivity()) != null) {
@@ -264,6 +298,9 @@ public class TrackedFragment extends Fragment {
         }
     }
 
+    /**
+     * Display the photo from the Tracked Activity in the Fragment Image View
+     */
     private void showPhoto() {
         TrackedManager.get(getActivity()).updateTracked(mTracked);
         // (Re)set the image button's image based on our photo
@@ -275,12 +312,18 @@ public class TrackedFragment extends Fragment {
         }
     }
 
+    /**
+     * Triggered as soon as the fragment starts to prepare the image to be viewed.
+     */
     @Override
     public void onStart() {
         super.onStart();
         showPhoto();
     }
 
+    /**
+     * Triggered when fragment stops to recycle image data effectively.
+     */
     @Override
     public void onStop() {
         super.onStop();

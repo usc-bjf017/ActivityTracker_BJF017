@@ -1,15 +1,12 @@
 package com.benjaminfinlay.activitytracker;
 
-import android.app.Activity;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
-import android.view.Display;
-
 import java.util.Date;
 import java.util.UUID;
 
+/**
+ * Tracked class to hold all the variables for the a Tracked Activity
+ */
 public class Tracked {
 
     private int mId;
@@ -21,11 +18,16 @@ public class Tracked {
     private Location mLocation;
     private String mImagePath;
 
-    public Tracked() {
-        // Generate unique identifier
-        mUUID = UUID.randomUUID();
-        mDate = new Date();
-        mLocation = TrackedListActivity.startupLocation;
+    /**
+     * Constructor for Tracked.
+     * Random UUID
+     * Current Date
+     * Current Location
+     */
+    Tracked() {
+        mUUID = UUID.randomUUID(); // Generate a random UUID when Tracked is created.
+        mDate = new Date(); // Sets the date to the current date.
+        mLocation = TrackedListActivity.startupLocation; // Sets the location to the location of the device when the app opened.
     }
 
     @Override
@@ -41,48 +43,48 @@ public class Tracked {
         this.mId = id;
     }
 
-    public UUID getUUID() {
+    UUID getUUID() {
         return mUUID;
     }
 
-    public void setUUID(UUID id) {
+    void setUUID(UUID id) {
         this.mUUID = id;
     }
 
-    public String getTitle() {
+    String getTitle() {
         return mTitle;
     }
 
-    public void setTitle(String title) {
+    void setTitle(String title) {
         this.mTitle = title;
     }
 
-    public Date getDate() {
+    Date getDate() {
         return mDate;
     }
 
-    public void setDate(Date date) {
+    void setDate(Date date) {
         this.mDate = date;
     }
 
-    public String getPlace() { return mPlace; }
+    String getPlace() { return mPlace; }
 
-    public void setPlace(String place) { this.mPlace = place; }
+    void setPlace(String place) { this.mPlace = place; }
 
-    public String getDetails() { return mDetails; }
+    String getDetails() { return mDetails; }
 
-    public void setDetails(String details) { this.mDetails = details; }
+    void setDetails(String details) { this.mDetails = details; }
 
-    public Location getLocation() { return mLocation; }
+    Location getLocation() { return mLocation; }
 
-    public void setLocation(double latitude, double longitude) {
+    void setLocation(double latitude, double longitude) {
         Location newLocation = new Location("");
         newLocation.setLatitude(latitude);
         newLocation.setLongitude(longitude);
         mLocation = newLocation;
     }
 
-    public String getImagePath() { return mImagePath; }
+    String getImagePath() { return mImagePath; }
 
-    public void setImagePath(String imagePath) { this.mImagePath = imagePath; }
+    void setImagePath(String imagePath) { this.mImagePath = imagePath; }
 }

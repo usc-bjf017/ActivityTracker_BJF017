@@ -9,15 +9,24 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.View;
 import android.widget.DatePicker;
-
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+/**
+ * Fragment to view a date picker.
+ */
 public class DatePickerFragment extends DialogFragment {
 
     public static final String EXTRA_DATE = "date";
     private Date mDate;
+
+    /**
+     * Triggered on new instance of the fragment
+     * Sets the date the dialog/popup needs to open to.
+     * @param date Date from the Tracked Activity.
+     * @return Returns the new instance of the date picker.
+     */
     public static DatePickerFragment newInstance(Date date) {
         Bundle args = new Bundle();
         args.putSerializable(EXTRA_DATE, date);
@@ -26,6 +35,10 @@ public class DatePickerFragment extends DialogFragment {
         return fragment;
     }
 
+    /**
+     * Sends the new date once the user has finish changing the date.
+     * @param resultCode The result code to be sent through. Caught by TrackedFragment.
+     */
     private void sendResult(int resultCode) {
         if (getTargetFragment() == null)
             return;
@@ -34,6 +47,13 @@ public class DatePickerFragment extends DialogFragment {
         getTargetFragment().onActivityResult(getTargetRequestCode(), resultCode, i);
     }
 
+    /**
+     * Triggered when the date popup/dialog is opened.
+     * Opens the date picker to the Tracked Activity's current set date.
+     * Sets up the OK button for when the user is finished.
+     * @param savedInstanceState App's compiled code and resources.
+     * @return
+     */
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 

@@ -1,23 +1,5 @@
 <resources>
     <string name="app_name">ActivityTracker</string>
-
-
-    <string name="activity_back_button">Back</string>
-    <string name="activity_title_label">Title</string>
-    <string name="activity_title_hint">Enter Activity Title</string>
-    <string name="activity_place_label">Place</string>
-    <string name="activity_place_hint">Enter Activity Place</string>
-    <string name="activity_date_label">Date</string>
-    <string name="activity_details_label">Details</string>
-    <string name="activity_details_hint">Enter Activity Details</string>
-    <string name="activity_map_button">Map</string>
-    <string name="activity_photo_button">Photo</string>
-    <string name="activity_share">Share</string>
-    <string name="activity_photo_description">Photo of Activity</string>
-    <string name="list_new_activity">New Activity</string>
-    <string name="list_help">Help</string>
-
-
     <string name="title_activity_tracked">TrackedActivity</string>
     <string name="tracked_title_hint">Enter Title</string>
     <string name="tracked_details_label">Details</string>
@@ -25,7 +7,6 @@
     <string name="tracked_solved_label">Solved?</string>
     <string name="tracked_title">Tracked</string>
     <string name="date_picker_title">Date:</string>
-
     <string name="new_activity">New Activity</string>
     <string name="help">Help</string>
     <string name="show_subtitle">Show Subtitle</string>
@@ -42,7 +23,4 @@
     <string name="tracked_image_button">Image</string>
     <string name="tracked_share_button">Share</string>
     <string name="tracked_delete_button">DELETE ACTIVITY</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

@@ -5,8 +5,17 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 
+/**
+ * Basic Activity run Fragments on.
+ */
 public abstract class SingleFragmentActivity extends FragmentActivity {
+
     protected abstract Fragment createFragment();
+
+    /**
+     * Triggered when the Activity is opened.
+     * @param savedInstanceState App's compiled code and resources.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

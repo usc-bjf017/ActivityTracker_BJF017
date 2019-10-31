@@ -15,24 +15,34 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Handles the Camera fragment and the operation of the phones camera.
+ */
 public class TrackedCameraFragment extends Fragment {
 
     private static final String TAG = "TrackedCameraFragment";
     public static final String EXTRA_PHOTO_FILENAME = "photo_filename";
+
     private Camera mCamera;
-    private SurfaceView mSurfaceView;
     private View mProgressContainer;
 
+    /**
+     * Triggered when the fragments view is created.
+     * @param inflater To create view instance based on XML file.
+     * @param parent Base view to create the view instance in.
+     * @param savedInstanceState App's compiled code and resources.
+     * @return The new view created.
+     */
     @Override
-    @SuppressWarnings("deprecation")
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_tracked_camera, parent, false);
+
+        // Set up the take picture button
         Button takePictureButton = (Button)v.findViewById(R.id.tracked_camera_takePictureButton);
         takePictureButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -42,15 +52,16 @@ public class TrackedCameraFragment extends Fragment {
             }
         });
 
-        mSurfaceView = (SurfaceView)v.findViewById(R.id.tracked_camera_surfaceView);
+        // Sets up the surface view to view camera view
+        SurfaceView mSurfaceView = (SurfaceView) v.findViewById(R.id.tracked_camera_surfaceView);
+
+        // Sets up the progress bar to be used when the photo is processing
         mProgressContainer = v.findViewById(R.id.tracked_camera_progressContainer);
         mProgressContainer.setVisibility(View.INVISIBLE);
 
+        // Setup camera
         SurfaceHolder holder = mSurfaceView.getHolder();
-        // setType() and SURFACE_TYPE_PUSH_BUFFERS are both deprecated,
-        // but are required for Camera preview to work on pre-3.0 devices.
         holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-
         holder.addCallback(new SurfaceHolder.Callback() {
             public void surfaceCreated(SurfaceHolder holder) {
                 // Tell the camera to use this surface as its preview area
@@ -90,6 +101,9 @@ public class TrackedCameraFragment extends Fragment {
         return v;
     }
 
+    /**
+     * Triggered when the camera takes a photo
+     */
     private Camera.ShutterCallback mShutterCallback = new Camera.ShutterCallback() {
         public void onShutter() {
             // Display the progress indicator
@@ -97,6 +111,9 @@ public class TrackedCameraFragment extends Fragment {
         }
     };
 
+    /**
+     * Triggered when new image is created after the camera captures view
+     */
     private Camera.PictureCallback mJpegCallback = new Camera.PictureCallback() {
         public void onPictureTaken(byte[] data, Camera camera) {
             // Create a filename
@@ -131,17 +148,19 @@ public class TrackedCameraFragment extends Fragment {
         }
     };
 
+    /**
+     * Opens the camera when the fragment is opened/resumed
+     */
     @TargetApi(9)
     @Override
     public void onResume() {
         super.onResume();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
-            mCamera = Camera.open(0);
-        } else {
-            mCamera = Camera.open();
-        }
+        mCamera = Camera.open(0);
     }
 
+    /**
+     * Stops the camera when the view is closed/paused
+     */
     @Override
     public void onPause() {
         super.onPause();
@@ -151,9 +170,9 @@ public class TrackedCameraFragment extends Fragment {
         }
     }
 
-    /** A simple algorithm to get the largest size available. For a more
-     * robust version, see CameraPreview.java in the ApiDemos
-     * sample app from Android. */
+    /**
+     * Gets the largest size possible for the camera.
+     */
     private Camera.Size getBestSupportedSize(List<Camera.Size> sizes, int width, int height) {
         Camera.Size bestSize = sizes.get(0);
         int largestArea = bestSize.width * bestSize.height;

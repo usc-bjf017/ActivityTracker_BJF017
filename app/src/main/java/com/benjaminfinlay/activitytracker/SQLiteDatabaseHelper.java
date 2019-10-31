@@ -5,19 +5,14 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-
-import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Handles all interactions with the SQLite Database
+ */
 public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
 
     private static final int DATABASE_VERSION = 1;
@@ -33,8 +28,6 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
     private static final String TRACKED_LONGITUDE = "longitude";
     private static final String TRACKED_IMAGE = "image";
 
-    private Context viewContext;
-
     private static final String[] COLUMNS = {
             TRACKED_ID,
             TRACKED_UUID,
@@ -46,13 +39,21 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
             TRACKED_LONGITUDE,
             TRACKED_IMAGE};
 
-    public SQLiteDatabaseHelper(Context context) {
+    /**
+     * Constructor for the SQLite Handler
+     * @param context The base application reference to run the database on.
+     */
+    SQLiteDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
-        viewContext = context;
     }
 
+    /**
+     * Triggered when the Database is run.
+     * @param db Database.
+     */
     @Override
     public void onCreate(SQLiteDatabase db) {
+        // Create table with each of the needed col's
         String CREATION_TABLE = "CREATE TABLE TrackedActivitys ( "
                 + "id INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + "uuid TEXT, "
@@ -67,6 +68,10 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(CREATION_TABLE);
     }
 
+    /**
+     * Triggered when the Database is run.
+     * @param db Database.
+     */
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // you can implement here migration process
@@ -74,13 +79,22 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
         this.onCreate(db);
     }
 
-    public void removeTracked(Tracked trackedActivity) {
+    /**
+     * Remove a tracked activity from the database.
+     * @param trackedActivity Tracked Activity to remove.
+     */
+    void removeTracked(Tracked trackedActivity) {
         // Get reference to writable DB
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_NAME, "id = ?", new String[] { String.valueOf(trackedActivity.getId()) });
         db.close();
     }
 
+    /**
+     * Get a single tracked activity from the database
+     * @param id ID of the tracked activity to get.
+     * @return The found activity.
+     */
     public Tracked getTracked(int id) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(TABLE_NAME, // a. table
@@ -110,7 +124,11 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
         return trackedActivity;
     }
 
-    public List<Tracked> allTrackedActivity() {
+    /**
+     * Gets all of the tracked activity's in the database.
+     * @return Returns a list of all Tracked Activity's in database.
+     */
+    List<Tracked> allTrackedActivity() {
         List<Tracked> tracked = new LinkedList<Tracked>();
 
         SQLiteDatabase db = this.getWritableDatabase();
@@ -140,7 +158,11 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
         return tracked;
     }
 
-    public void addTracked(Tracked trackedActivity) {
+    /**
+     * Add a Tracked Activity to the database.
+     * @param trackedActivity Tracked Activity to add to the database.
+     */
+    void addTracked(Tracked trackedActivity) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(TRACKED_UUID, trackedActivity.getUUID().toString());
@@ -156,7 +178,11 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    public int updateTracked(Tracked trackedActivity) {
+    /**
+     * Update a Tracked Activity in the database to the latest information.
+     * @param trackedActivity Tracked Activity to get the update information from.
+     */
+    int updateTracked(Tracked trackedActivity) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(TRACKED_UUID, trackedActivity.getUUID().toString());

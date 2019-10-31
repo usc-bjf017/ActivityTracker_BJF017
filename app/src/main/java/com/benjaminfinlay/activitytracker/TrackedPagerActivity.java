@@ -6,24 +6,32 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-
 import java.util.Stack;
 import java.util.UUID;
 
+/**
+ * TrackedPagerActivity used to open the tracked activity's to view all information.
+ * With the ability to swipe left and right to view other tracked activity's.
+ */
 public class TrackedPagerActivity extends FragmentActivity {
 
-    private ViewPager mViewPager;
     private Stack<Tracked> mTracked;
     private TrackedFragment trackedFragmentRef;
 
+    /**
+     * Triggered when the Activity is opened.
+     * @param savedInstanceState App's compiled code and resources.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mViewPager = new ViewPager(this);
+        // Gets the view pager from the view.
+        ViewPager mViewPager = new ViewPager(this);
         mViewPager.setId(R.id.viewPager);
         setContentView(mViewPager);
 
+        // Gets the amount of items in the list to be able to swipe between & get the tracked activity at a given position in list.
         mTracked = TrackedManager.get(this).getAllTracked();
         FragmentManager fm = getSupportFragmentManager();
         mViewPager.setAdapter(new FragmentStatePagerAdapter(fm) {
@@ -39,6 +47,7 @@ public class TrackedPagerActivity extends FragmentActivity {
             }
         });
 
+        // Listens for when the screen is swiped to change the viewed tracked activity.
         mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             public void onPageScrollStateChanged(int state) { }
             public void onPageScrolled(int pos, float posOffset, int posOffsetPixels) { }
@@ -50,6 +59,7 @@ public class TrackedPagerActivity extends FragmentActivity {
             }
         });
 
+        // Sets what the current mTracked is.
         UUID trackedId = (UUID)getIntent().getSerializableExtra(TrackedFragment.EXTRA_TRACKED_ID);
         for (int i = 0; i < mTracked.size(); i++) {
             if (mTracked.get(i).getUUID().equals(trackedId)) {
